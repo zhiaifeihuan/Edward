@@ -1,0 +1,75 @@
+/*
+author:Edward
+华为笔试第二题
+输入字符串 "1,4,8" 1,4,8为1-9中不重复的三个数字
+对三个数字进行任意组合(需包含所有情况)，如1,4,8,14,18,41,48,81,84,148,184,418,481,814,841
+输出第N个数,N为输入的三个整数中的最大值
+***数字2可以当作5来组合，5也可以当作2来组合，同理6和9，但输入中不会同时包含25或69***
+*/
+
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+void insert(vector<int>& nums, const int a[], int i, int sum) {
+	for (int j = 0; j < 3; j++) {
+		if (a[j] != a[i]) {
+			int two = a[i] * 10 + a[j];
+			int three = two * 10 + sum - a[i] - a[j];
+			if (nums.end() == find(nums.begin(), nums.end(), two))
+				nums.push_back(two);
+			if (nums.end() == find(nums.begin(), nums.end(), three))
+				nums.push_back(three);
+		}
+	}
+}
+
+int main() {
+	string input;
+	vector<int> nums;
+	while (cin >> input) {
+
+		int a[3] = { 0 };
+		int b[3] = { 0 };
+		b[0] = a[0] = input.substr(0, 1)[0] - 48;
+		b[1] = a[1] = input.substr(input.find(',') + 1, 1)[0] - 48;
+		b[2] = a[2] = input.substr(input.find_last_of(',') + 1, 1)[0] - 48;
+		if (a[0] == a[1] || a[1] == a[2] || a[2] == a[3] || a[0] < 1 || a[0]>9 || a[1] < 1 || a[1]>9 || a[2] < 1 || a[2]>9)
+			return -1;
+		int suma = a[0] + a[1] + a[2];
+		int sumb = suma;
+		for (int i = 0; i < 3; i++)
+			switch (a[i]) {
+			case 2:nums.push_back(2); nums.push_back(5); b[i] = 5; sumb += 3; break;
+			case 5:nums.push_back(2); nums.push_back(5); b[i] = 2; sumb -= 3; break;
+			case 6:nums.push_back(6); nums.push_back(9); b[i] = 9; sumb += 3; break;
+			case 9:nums.push_back(6); nums.push_back(9); b[i] = 6; sumb -= 3; break;
+			default:nums.push_back(a[i]); break;
+			}
+
+
+		for (int i = 0; i < 3; i++) {
+			insert(nums, a, i, suma);
+			insert(nums, b, i, sumb);
+		}
+
+		for (int i = 0; i < nums.size() - 1; i++) {
+			int temp = 0;
+			for (int j = i; j < nums.size() - 1; j++) {
+				if (nums[j] > nums[j + 1]) {
+					temp = nums[j];
+					nums[j] = nums[j + 1];
+					nums[j + 1] = temp;
+				}
+			}
+		}
+
+		/*for (auto x : nums)
+			cout << x << endl;*/
+
+		int max = a[0] > a[1] ? a[0] : a[1];
+		max = max > a[2] ? max : a[2];
+		cout << nums[max - 1] << endl;
+	}
+}
