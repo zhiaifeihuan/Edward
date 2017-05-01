@@ -1,3 +1,6 @@
 2016.12.28
 1.31
 C++中的正则表达式中 '?'无法使用/?或者/x3F匹配  只能使用 \\?   [\?] 来匹配， 其他字符可以直接\匹配  具体原因未知
+
+服务器Centos中,使用yum安装rpm格式的postgresql，在系统服务中启动数据库 service postgresql-9.6 start
+本机Ubuntu中，使用源码安装postgresql，使用pg_ctl -D ~/database start 启动数据库
